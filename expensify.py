@@ -279,9 +279,6 @@ def main():
         expenses = get_all_expenses()
         print_expenses(expenses)
 
-    # TO-DO: generate expense report
-
-    # TO-DO: mark current expense as sbumitted
 
     # testing menu items for easy access
     if action['action'] == 'Test 1':
@@ -292,6 +289,9 @@ def main():
         vendors = get_vendors()
         for vendor in vendors:
             print(vendor)
+   
+
+   # TO-DO: generate expense report
 
 
 if __name__ == '__main__':
