@@ -3,6 +3,8 @@ import interface  # all termainl interface elements
 import db  # all sqlite database functions
 from tabulate import tabulate
 
+# TO-DO: generate expense report
+# TO-DO: setup file storage/linking with database path
 
 # add a new expense to the database
 def add_expense():
@@ -290,9 +292,6 @@ def main():
         for vendor in vendors:
             print(vendor)
    
-
-   # TO-DO: generate expense report
-
 
 if __name__ == '__main__':
     main()
