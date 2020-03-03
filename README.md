@@ -6,4 +6,4 @@ db.py - SQLite Databse Funcation
 
 ### Requirements:
 [PythonInquirer](https://github.com/CITGuru/PyInquirer)  
-[python-tabulate](https://github.com/astanin/python-tabulate  
+[python-tabulate](https://github.com/astanin/python-tabulate)  
