@@ -216,10 +216,6 @@ def main():
 
     # TO-DO: mark current expense as sbumitted
 
-    # TO-DO: delete current expense
-
-    # TO-DO: edit current expanse
-
     # testing menu items for easy access
     if action['action'] == 'Test 1':
         expenses = get_unsubmitted_expenses()
