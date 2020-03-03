@@ -25,7 +25,7 @@ def add_expense():
 
 # edit an existing "unsubmitted" expense
 def edit_expense():
-    expenses = sort_expenses(get_unsubmitted_expenses())
+    expenses = sort_expenses(get_expenses(0))
     editable_expenses = []
 
     # generate a sorted list of unsubmitted expenses for interface
@@ -67,7 +67,7 @@ def edit_expense():
 
 # delete an existing "unsubmitted" expense
 def delete_expense():
-    expenses = sort_expenses(get_unsubmitted_expenses())
+    expenses = sort_expenses(get_expenses(0))
     editable_expenses = []
 
     # generate a sorted list of unsubmitted expenses for interface
@@ -94,6 +94,72 @@ def delete_expense():
         sys.exit(0)
 
 
+# mark an existing unsubmitted expense(s) as submitted
+def mark_expense_submitted():
+    expenses = sort_expenses(get_expenses(0))
+    editable_expenses = []
+
+    # generate a sorted list of unsubmitted expenses for interface
+    for expense in expenses:
+        title = f"{expense['date']} | ${expense['amount']:.2f} | {expense['description']} | {expense['vendor']}) | ID: {expense['id']}"
+        editable_expenses.append(title)
+
+    expense_to_mark = interface.mark_expense_submitted(
+        editable_expenses)
+
+    if expense_to_mark['mark'] == True:
+        # loop through selected expense(s)
+        for expense in expense_to_mark['expenses']:
+            # format the returned text to get expense record id
+            expense_to_mark_id = expense.split(' | ')[-1].split(': ')[-1]
+            command = f"UPDATE expenses SET status=1 WHERE id={expense_to_mark_id}"
+            status = db.execute(command)
+
+            if status == False:
+                print(color.BOLD + '* ERROR! Expense(s) not updated.' + color.END)
+                break
+
+        if status:
+            print(color.BOLD + '* Expense(s) marked as submitted!' + color.END)
+
+    else:
+        print('Expense(s) update cancelled!')
+        sys.exit(0)
+
+
+# mark an existing submitted expense(s) as unsubmitted
+def mark_expense_unsubmitted():
+    expenses = sort_expenses(get_expenses(1))
+    editable_expenses = []
+
+    # generate a sorted list of unsubmitted expenses for interface
+    for expense in expenses:
+        title = f"{expense['date']} | ${expense['amount']:.2f} | {expense['description']} | {expense['vendor']}) | ID: {expense['id']}"
+        editable_expenses.append(title)
+
+    expense_to_mark = interface.mark_expense_unsubmitted(
+        editable_expenses)
+
+    if expense_to_mark['mark'] == True:
+        # loop through selected expense(s)
+        for expense in expense_to_mark['expenses']:
+            # format the returned text to get expense record id
+            expense_to_mark_id = expense.split(' | ')[-1].split(': ')[-1]
+            command = f"UPDATE expenses SET status=0 WHERE id={expense_to_mark_id}"
+            status = db.execute(command)
+
+            if status == False:
+                print(color.BOLD + '* ERROR! Expense(s) not updated.' + color.END)
+                break
+
+        if status:
+            print(color.BOLD + '* Expense(s) marked as unsubmitted!' + color.END)
+
+    else:
+        print('Expense(s) update cancelled!')
+        sys.exit(0)
+
+
 # get all vendors currently in database
 def get_vendors():
     command = "SELECT Vendor FROM expenses"
@@ -114,8 +180,9 @@ def get_all_expenses():
 
 
 # get all expenses that haven't been submitted
-def get_unsubmitted_expenses():
-    command = "SELECT * FROM expenses WHERE status=0"
+def get_expenses(status):  # 0 == unsubmitted, 1 == submitted
+
+    command = f"SELECT * FROM expenses WHERE status={status}"
     expenses = db.fetchall(command)
     return expenses
 
@@ -159,12 +226,6 @@ def print_expenses(expenses, hide_vendor=False):
 
     print(tabulate(expenses, headers="keys",
                    tablefmt='simple', showindex=False, floatfmt='.2f'))
-    # if hide_vendor:
-    # print(
-    #     f"{n + 1} | {expense['date']} | ${expense['amount']:.2f} | {expense['description']}")
-    # else:
-    # print(
-    #     f"{n + 1} | {expense['date']} | ${expense['amount']:.2f} | {expense['description']} | {expense['vendor']}")
 
 
 # terminal coloring and bolding
@@ -198,8 +259,14 @@ def main():
     if action['action'] == 'Delete a current expense':
         delete_expense()
 
+    if action['action'] == 'Mark expenses(s) as submitted':
+        mark_expense_submitted()
+
+    if action['action'] == 'Mark expenses(s) as unsubmitted':
+        mark_expense_unsubmitted()
+
     if action['action'] == 'View unsubmitted expenses':
-        expenses = get_unsubmitted_expenses()
+        expenses = get_expenses(0)
         print_expenses(expenses)
 
     if action['action'] == 'View expenses by vendor':
@@ -218,7 +285,7 @@ def main():
 
     # testing menu items for easy access
     if action['action'] == 'Test 1':
-        expenses = get_unsubmitted_expenses()
+        expenses = get_expenses(0)
         print_expenses(expenses)
 
     if action['action'] == 'List Vendors':

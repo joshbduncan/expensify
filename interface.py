@@ -15,6 +15,8 @@ def intro():
                 'Add a new expense',
                 'Edit a current expense',
                 'Delete a current expense',
+                'Mark expenses(s) as submitted',
+                'Mark expenses(s) as unsubmitted',
                 Separator(),
                 'View unsubmitted expenses',
                 'View expenses by vendor',
@@ -184,6 +186,64 @@ def delete_expense(expenses):
             'name': 'delete',
             'default': False,
         },
+    ]
+
+    answers = prompt(questions)
+
+    return answers
+
+
+def mark_expense_submitted(expenses):
+
+    choices = []
+
+    for expense in expenses:
+        choices.append({'name': expense})
+
+    questions = [
+        {
+            'type': 'checkbox',
+            'message': 'What expense(s) would you like mark as submitted?',
+            'name': 'expenses',
+            'choices': choices,
+            'validate': lambda answer: 'You must choose at least one expense.'
+            if len(answer) == 0 else True
+        },
+        {
+            'type': 'confirm',
+            'message': "Are you sure you want to mark expense(s) as submitted?",
+            'name': 'mark',
+            'default': False,
+        }
+    ]
+
+    answers = prompt(questions)
+
+    return answers
+
+
+def mark_expense_unsubmitted(expenses):
+
+    choices = []
+
+    for expense in expenses:
+        choices.append({'name': expense})
+
+    questions = [
+        {
+            'type': 'checkbox',
+            'message': 'What expense(s) would you like mark as unsubmitted?',
+            'name': 'expenses',
+            'choices': choices,
+            'validate': lambda answer: 'You must choose at least one expense.'
+            if len(answer) == 0 else True
+        },
+        {
+            'type': 'confirm',
+            'message': "Are you sure you want to mark expense(s) as unsubmitted?",
+            'name': 'mark',
+            'default': False,
+        }
     ]
 
     answers = prompt(questions)
