@@ -14,8 +14,9 @@ db.py - SQLite Databse Funcation
 ### Database Setup:
 [SQLite](https://www.sqlite.org/)
 
-**Schema:**  
-* expenses
+**File:** expenses.df  
+
+**expenses Table Schema:**  
   - id (INTEGER): expense id (primary key)
   - date (TEXT): date 2000-01-01
   - description(TEXT): description of expense
