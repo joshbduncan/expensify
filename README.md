@@ -11,11 +11,7 @@ db.py - SQLite Databse Funcation
 [python-tabulate](https://github.com/astanin/python-tabulate)  
 [sqlite3](https://docs.python.org/3/library/sqlite3.html)  
 
-### Database Setup:
-[SQLite](https://www.sqlite.org/)
-
-**File:** expenses.df  
-
+### Database Setup: expenses.db
 **expenses Table Schema:**  
   - id (INTEGER): expense id (primary key)
   - date (TEXT): date 2000-01-01
