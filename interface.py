@@ -15,20 +15,23 @@ def intro():
                 'Add a new expense',
                 'Edit a current expense',
                 'Delete a current expense',
-                'Mark expenses(s) as submitted',
-                'Mark expenses(s) as unsubmitted',
                 Separator(),
                 'View unsubmitted expenses',
                 'View expenses by vendor',
                 'View all expenses',
                 Separator(),
-                'Test 1',
-                'List Vendors',
+                'Mark expenses(s) as submitted',
+                'Mark expenses(s) as unsubmitted',
+                Separator(),
                 'Exit',
+                # Separator(),
+                # 'Test 1',
             ]
         }
     ]
+
     answers = prompt(questions)
+
     return answers
 
 
@@ -53,11 +56,12 @@ def new_expense(vendors):
             'type': 'input',
             'name': 'new_vendor',
             'message': 'New vendor name?',
-            'when': lambda answers: answers['vendor'] == 'New Vendor'
+            'when': lambda answers: answers['vendor'] == 'New Vendor',
         },
         {'type': 'input', 'name': 'amount',
          'message': 'Amount? (excluding $)'},
     ]
+
     answers = prompt(questions)
 
     if answers['vendor'] == 'New Vendor':
@@ -76,6 +80,7 @@ def vendor_expenses(vendors):
             'choices': vendors
         },
     ]
+
     answers = prompt(questions)
 
     return answers
@@ -206,20 +211,21 @@ def mark_expense_submitted(expenses):
             'message': 'What expense(s) would you like mark as submitted?',
             'name': 'expenses',
             'choices': choices,
-            'validate': lambda answer: 'You must choose at least one expense.'
-            if len(answer) == 0 else True
         },
-        {
-            'type': 'confirm',
-            'message': "Are you sure you want to mark expense(s) as submitted?",
-            'name': 'mark',
-            'default': False,
-        }
+        # {
+        #     'type': 'confirm',
+        #     'message': "Are you sure you want to mark expense(s) as submitted?",
+        #     'name': 'mark',
+        #     'default': False,
+        # }
     ]
 
     answers = prompt(questions)
 
-    return answers
+    if len(answers['expenses']) < 1:
+        return False
+    else:
+        return answers
 
 
 def mark_expense_unsubmitted(expenses):
@@ -235,17 +241,36 @@ def mark_expense_unsubmitted(expenses):
             'message': 'What expense(s) would you like mark as unsubmitted?',
             'name': 'expenses',
             'choices': choices,
-            'validate': lambda answer: 'You must choose at least one expense.'
-            if len(answer) == 0 else True
         },
-        {
-            'type': 'confirm',
-            'message': "Are you sure you want to mark expense(s) as unsubmitted?",
-            'name': 'mark',
-            'default': False,
-        }
+        # {
+        #     'type': 'confirm',
+        #     'message': "Are you sure you want to mark expense(s) as unsubmitted?",
+        #     'name': 'mark',
+        #     'default': False,
+        # }
     ]
 
     answers = prompt(questions)
 
-    return answers
+    if len(answers['expenses']) < 1:
+        return False
+    else:
+        return answers
+
+
+def cont_program():
+    questions = [
+        {
+            'type': 'confirm',
+            'message': "Would you like to continue using the program?",
+            'name': 'cont',
+            'default': True,
+        },
+    ]
+
+    answers = prompt(questions)
+
+    if answers['cont']:
+        return True
+
+    return False
