@@ -1,5 +1,17 @@
 from __future__ import print_function, unicode_literals
 from PyInquirer import style_from_dict, Token, prompt, Separator
+from PyInquirer import Validator, ValidationError
+
+
+class NumberValidator(Validator):
+    def validate(self, document):
+        try:
+            float(document.text)
+        except ValueError:
+            raise ValidationError(
+                message="Please enter a dollar amount without the '$'.",
+                cursor_position=len(document.text))  # Move cursor to end
+
 
 cards = ['CA (Spark VISA 1086)', 'BP (Spark VISA 1086)',
          'RX (VISA 3715)', 'Company Account']
@@ -58,8 +70,12 @@ def new_expense(vendors):
             'message': 'New vendor name?',
             'when': lambda answers: answers['vendor'] == 'New Vendor',
         },
-        {'type': 'input', 'name': 'amount',
-         'message': 'Amount? (excluding $)'},
+        {
+            'type': 'input',
+            'name': 'amount',
+            'message': 'Amount? (excluding $)',
+            'validate': NumberValidator,
+        },
     ]
 
     answers = prompt(questions)

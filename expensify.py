@@ -8,7 +8,7 @@ from tabulate import tabulate
 # TODO: generate expense report
 # TODO: setup file storage/linking with database path
 # TODO: make sure "new vendor" is already a vendor
-
+# TODO: remove '$' from any entered amount
 
 def add_expense():  # add a new expense to the database
     vendors = get_vendors() + ['New Vendor']
