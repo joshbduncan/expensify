@@ -1,46 +1,33 @@
 import sys
 import os
-import interface  # all termainl interface elements
-import db  # all sqlite database functions
 from tabulate import tabulate  # better printing of db table info
 
-
-# TODO: make file to setup DB if not present
-# TODO: generate expense report
-# TODO: view old reports
-# TODO: view submitted expenses
-# TODO: setup file storage/linking with database path
-# TODO: make sure "new vendor" is already a vendor
-# TODO: if no expenses returned for action methods
-# TODO: new expense no cards present
-# TODO: new expense no vendors present
-# TODO: setup new card entry system (like vendors)
-# TODO: add proper spacing in code
-# TODO: add comments to code
+# import internal modules
+import settings  # import project setting
+import interface  # all termainl interface elements
+import db  # all sqlite database functions
 
 
 # add a new expense to the database
 def add_expense():
 
-    # get the current vendors in the database
     vendors = get_vendors()
     if vendors:
         vendors.append('New Vendor')
     else:
         vendors = ['New Vendor']
 
-    # get expense data from user
+    # TODO: setup new card entry system (like vendors)
+    # TODO: new expense no cards present
+
     insert_data = interface.new_expense(vendors)
 
-    # add info not aksed in interface
     insert_data['receipt'] = '/path'
     insert_data['status'] = 0
     insert_data['id'] = None
 
-    # write data to database
     command = "INSERT INTO expenses VALUES (:id, :date, :description, :card, :vendor, :amount, :receipt, :status)"
 
-    # check database write status and report to user
     status = db.execute(command, insert_data)
     if status:
         print(color.BOLD + '\n* New expenses added!' + color.END)
@@ -295,6 +282,13 @@ def main():
 
     if action['action'] == 'View unsubmitted expenses':
         expenses = get_expenses(0)
+        if expenses == []:
+            print('\nNo matching expenses!')
+        else:
+            print_expenses(expenses)
+
+    if action['action'] == 'View submitted expenses':
+        expenses = get_expenses(1)
         if expenses == []:
             print('\nNo matching expenses!')
         else:

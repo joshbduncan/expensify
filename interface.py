@@ -2,6 +2,9 @@ from __future__ import print_function, unicode_literals
 from PyInquirer import style_from_dict, Token, prompt, Separator
 from PyInquirer import Validator, ValidationError
 
+# import internal modules
+import settings  # import project setting
+
 
 class NumberValidator(Validator):
     def validate(self, document):
@@ -11,10 +14,6 @@ class NumberValidator(Validator):
             raise ValidationError(
                 message="Please enter a dollar amount without the '$'.",
                 cursor_position=len(document.text))  # Move cursor to end
-
-
-cards = ['CA (Spark VISA 1086)', 'BP (Spark VISA 1086)',
-         'RX (VISA 3715)', 'Company Account']
 
 
 def intro():
@@ -29,6 +28,7 @@ def intro():
                 'Delete a current expense',
                 Separator(),
                 'View unsubmitted expenses',
+                'View submitted expenses',
                 'View expenses by vendor',
                 'View all expenses',
                 Separator(),
@@ -56,7 +56,7 @@ def new_expense(vendors):
             'type': 'list',
             'name': 'card',
             'message': 'Which company card was used?',
-            'choices': cards
+            'choices': settings.cards
         },
         {
             'type': 'list',
@@ -145,7 +145,7 @@ def edit_expense(expenses, vendors):
             'type': 'list',
             'name': 'card',
             'message': 'Which is the updated card?',
-            'choices': cards,
+            'choices': settings.cards,
             'when': lambda answers: answers['update_card'] == True
         },
         {

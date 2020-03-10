@@ -1,11 +1,18 @@
+# import internal modules
+import settings  # import project setting
 import sqlite3
 
 
+db = settings.db
+
+
+# connect to database
 def connect():
-    conn = sqlite3.connect('expenses.db')
+    conn = sqlite3.connect(db)
     return conn
 
 
+# execute command to sqlite database and return status
 def execute(command, data=''):
     try:
         conn = connect()
@@ -19,6 +26,7 @@ def execute(command, data=''):
         return False
 
 
+# fetch all matching records
 def fetchall(command, data=''):
     try:
         conn = connect()
