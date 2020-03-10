@@ -8,6 +8,19 @@ import interface  # all termainl interface elements
 import db  # all sqlite database functions
 
 
+# check for database, create if not there
+def check_for_database():
+    # get the path of the python program
+    program_path = os.path.dirname(os.path.realpath(__file__))
+    # set the correct path for the database
+    db_path = str(program_path + '/' + settings.db)
+
+    if os.path.exists(db_path):
+        return True
+    else:
+        return False
+
+
 # add a new expense to the database
 def add_expense():
 
@@ -261,6 +274,14 @@ class color:
 
 def main():
 
+    # check to see if expenses.db database is created
+    # TODO: check on sqlite db error catching
+    # https://www.sqlitetutorial.net/sqlite-python/create-tables/
+    valid_db = check_for_database()
+    if not valid_db:
+        print('\nExepense database not found! Creating a new one...\n')
+        status = db.create_db()
+
     # run intro menu interface and get user action
     action = interface.intro()
 
@@ -334,6 +355,7 @@ def main():
 
 
 if __name__ == '__main__':
+
     status = True
     while status:
         status = main()
