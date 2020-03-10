@@ -32,6 +32,8 @@ def add_expense():
 
     # TODO: setup new card entry system (like vendors)
     # TODO: new expense no cards present
+    # TODO: check if exact record already exists
+    # TODO: new vendor can't be int
 
     insert_data = interface.new_expense(vendors)
 
@@ -39,13 +41,32 @@ def add_expense():
     insert_data['status'] = 0
     insert_data['id'] = None
 
-    command = "INSERT INTO expenses VALUES (:id, :date, :description, :card, :vendor, :amount, :receipt, :status)"
-
-    status = db.execute(command, insert_data)
-    if status:
-        print(color.BOLD + '\n* New expenses added!' + color.END)
+    if check_for_dupe(insert_data):
+        print(color.BOLD + '\n* Expense already exists!' + color.END)
     else:
-        print(color.BOLD + '\n* ERROR! New expense not added.' + color.END)
+        command = "INSERT INTO expenses VALUES (:id, :date, :description, :card, :vendor, :amount, :receipt, :status)"
+
+        status = db.execute(command, insert_data)
+        if status:
+            print(color.BOLD + '\n* New expenses added!' + color.END)
+        else:
+            print(color.BOLD + '\n* ERROR! New expense not added.' + color.END)
+
+
+# check to make sure new/edited expense isn't a duplication
+def check_for_dupe(expense):
+    # get all database expenses
+    expenses = get_expenses('ALL')
+
+    # turn expense into tuple for checking against all expenses
+    check_for_dupe = tuple(v for v in expense.values())
+
+    if check_for_dupe[:4] in [expense[1:5] for expense in expenses]:
+        print('DUPE')
+        return True
+    else:
+        print('NOT A DUPE')
+        return False
 
 
 # edit an existing "unsubmitted" expense
@@ -86,11 +107,12 @@ def edit_expense():
             else:
                 print(color.BOLD + '\n* ERROR! Expense was not updated.' + color.END)
         else:  # if nothing was actually change about the expense in the interface
-            print('No changes were made!')
+            print(color.BOLD + '\n* No changes were made!' + color.END)
 
 
 # delete an existing "unsubmitted" expense
 def delete_expense():
+    # TODO: delete multiple expenses
     expenses = sort_expenses(get_expenses(0))
     if expenses == []:
         print('\nNo expenses available to delete!')
@@ -274,6 +296,8 @@ class color:
 
 def main():
 
+    os.system('clear')
+
     # check to see if expenses.db database is created
     # TODO: check on sqlite db error catching
     # https://www.sqlitetutorial.net/sqlite-python/create-tables/
@@ -282,80 +306,95 @@ def main():
         print('\nExepense database not found! Creating a new one...\n')
         status = db.create_db()
 
-    # run intro menu interface and get user action
-    action = interface.intro()
+    while True:
 
-    # act upon the user selected action
-    if action['action'] == 'Add a new expense':
-        add_expense()
+        # run intro menu interface and get user action
+        try:
+            action = interface.intro()
+            if action == {}:
+                raise Exception
+        except:
+            os.system('clear')
+            # print(color.BOLD + '\n* ERROR! Invalid selection.\n' + color.END)
+            continue
 
-    if action['action'] == 'Edit a current expense':
-        edit_expense()
+        # act upon the user selected action
+        if action['action'] == 'Add a new expense':
+            add_expense()
 
-    if action['action'] == 'Delete a current expense':
-        delete_expense()
+        if action['action'] == 'Edit a current expense':
+            edit_expense()
 
-    if action['action'] == 'Mark expenses(s) as submitted':
-        mark_expense_submitted()
+        if action['action'] == 'Delete a current expense':
+            delete_expense()
 
-    if action['action'] == 'Mark expenses(s) as unsubmitted':
-        mark_expense_unsubmitted()
+        if action['action'] == 'Mark expenses(s) as submitted':
+            mark_expense_submitted()
 
-    if action['action'] == 'View unsubmitted expenses':
-        expenses = get_expenses(0)
-        if expenses == []:
-            print('\nNo matching expenses!')
+        if action['action'] == 'Mark expenses(s) as unsubmitted':
+            mark_expense_unsubmitted()
+
+        if action['action'] == 'View unsubmitted expenses':
+            expenses = get_expenses(0)
+            if expenses == []:
+                print('\nNo matching expenses!')
+            else:
+                print_expenses(expenses)
+
+        if action['action'] == 'View submitted expenses':
+            expenses = get_expenses(1)
+            if expenses == []:
+                print('\nNo matching expenses!')
+            else:
+                print_expenses(expenses)
+
+        if action['action'] == 'View expenses by vendor':
+            vendors = get_vendors()
+
+            if vendors:
+                vendors = sorted(list(set(vendors)))
+                selected_vendor = interface.vendor_expenses(vendors)
+                expenses = get_vendor_expenses(selected_vendor)
+                print_expenses(expenses)
+            else:
+                print('\nNo current vendors!')
+
+        if action['action'] == 'View all expenses':
+            expenses = get_expenses('ALL')
+            if expenses == []:
+                print('\nNo matching expenses!')
+            else:
+                print_expenses(expenses)
+
+        # exit the program
+        if action['action'] == 'Exit':
+            break
+
+        # testing menu items for easy access
+        if action['action'] == 'Test 1':
+            interface.pizza()
+
+        # check to see if users wants to continue using program
+        print('')
+        cont = interface.cont_program()
+
+        if cont:
+            os.system('clear')
+            pass
         else:
-            print_expenses(expenses)
-
-    if action['action'] == 'View submitted expenses':
-        expenses = get_expenses(1)
-        if expenses == []:
-            print('\nNo matching expenses!')
-        else:
-            print_expenses(expenses)
-
-    if action['action'] == 'View expenses by vendor':
-        vendors = get_vendors()
-
-        if vendors:
-            vendors = sorted(list(set(vendors)))
-            selected_vendor = interface.vendor_expenses(vendors)
-            expenses = get_vendor_expenses(selected_vendor)
-            print_expenses(expenses)
-        else:
-            print('\nNo current vendors!')
-
-    if action['action'] == 'View all expenses':
-        expenses = get_expenses('ALL')
-        if expenses == []:
-            print('\nNo matching expenses!')
-        else:
-            print_expenses(expenses)
-
-    # exit the program
-    if action['action'] == 'Exit':
-        return False
-
-    # testing menu items for easy access
-    if action['action'] == 'Test 1':
-        interface.pizza()
-
-    # check to see if users wants to continue using program
-    print('')
-    cont = interface.cont_program()
-
-    if cont:
-        os.system('clear')
-        return True
-    else:
-        return False
-
-    return True
+            break
 
 
 if __name__ == '__main__':
+    main()
 
-    status = True
-    while status:
-        status = main()
+
+# TODO: generate expense report
+# TODO: sanitize input data
+# TODO: view old reports
+# TODO: setup file storage/linking with database path
+# TODO: make sure "new vendor" is already a vendor
+# TODO: add proper spacing in code
+# TODO: add comments to code
+# TODO: import csv of external expenses
+# TODO: make sure all messages are BOLD

@@ -1,6 +1,0 @@
-TODO: generate expense report
-TODO: view old reports
-TODO: setup file storage/linking with database path
-TODO: make sure "new vendor" is already a vendor
-TODO: add proper spacing in code
-TODO: add comments to code
