@@ -30,11 +30,6 @@ def add_expense():
     else:
         vendors = ['New Vendor']
 
-    # TODO: setup new card entry system (like vendors)
-    # TODO: new expense no cards present
-    # TODO: check if exact record already exists
-    # TODO: new vendor can't be int
-
     insert_data = interface.new_expense(vendors)
 
     insert_data['receipt'] = '/path'
@@ -62,10 +57,8 @@ def check_for_dupe(expense):
     check_for_dupe = tuple(v for v in expense.values())
 
     if check_for_dupe[:4] in [expense[1:5] for expense in expenses]:
-        print('DUPE')
         return True
     else:
-        print('NOT A DUPE')
         return False
 
 
@@ -76,7 +69,7 @@ def edit_expense():
     expenses = sort_expenses(get_expenses(0))
 
     if expenses == []:
-        print('\nNo expenses available to edit!')
+        print(color.BOLD + '\n* No expenses available to edit!' + color.END)
     else:
         editable_expenses = interface_list(expenses)
         vendors = get_vendors() + ['New Vendor']
@@ -112,10 +105,9 @@ def edit_expense():
 
 # delete an existing "unsubmitted" expense
 def delete_expense():
-    # TODO: delete multiple expenses
     expenses = sort_expenses(get_expenses(0))
     if expenses == []:
-        print('\nNo expenses available to delete!')
+        print(color.BOLD + '\n* No expenses available to delete!' + color.END)
     else:
         editable_expenses = interface_list(expenses)
 
@@ -134,14 +126,14 @@ def delete_expense():
             else:
                 print(color.BOLD + '\n* ERROR! Expense was not deleted.' + color.END)
         else:
-            print('Expense deletion cancelled!')
+            print(color.BOLD + '\n* Expense deletion cancelled!' + color.END)
 
 
 # mark existing unsubmitted expense(s) as submitted
 def mark_expense_submitted():
     expenses = sort_expenses(get_expenses(0))
     if expenses == []:
-        print('\nNo matching expenses!')
+        print(color.BOLD + '\n* No matching expenses!' + color.END)
     else:
         # generate interface list of available expenses
         editable_expenses = interface_list(expenses)
@@ -171,14 +163,15 @@ def mark_expense_submitted():
                 print(color.BOLD + '\n* Expense(s) marked as submitted!' + color.END)
 
         else:
-            print('No expenses selected! Update cancelled!')
+            print(color.BOLD + 'No expenses selected! Update cancelled!' +
+                  color.END)
 
 
 # mark existing submitted expense(s) as unsubmitted
 def mark_expense_unsubmitted():
     expenses = sort_expenses(get_expenses(1))
     if expenses == []:
-        print('\nNo matching expenses!')
+        print(color.BOLD + '\n* No matching expenses!' + color.END)
     else:
         editable_expenses = interface_list(expenses)
 
@@ -202,7 +195,8 @@ def mark_expense_unsubmitted():
                 print(color.BOLD + '\n* Expense(s) marked as unsubmitted!' + color.END)
 
         else:
-            print('No expenses selected! Update cancelled!')
+            print(color.BOLD + '\n* No expenses selected! Update cancelled!' +
+                  color.END)
 
 
 # get all vendors currently in database
@@ -298,12 +292,9 @@ def main():
 
     os.system('clear')
 
-    # check to see if expenses.db database is created
-    # TODO: check on sqlite db error catching
-    # https://www.sqlitetutorial.net/sqlite-python/create-tables/
     valid_db = check_for_database()
     if not valid_db:
-        print('\nExepense database not found! Creating a new one...\n')
+        print(color.BOLD + '\n* Expense database not found! Creating a new one...\n' + color.END)
         status = db.create_db()
 
     while True:
@@ -337,14 +328,14 @@ def main():
         if action['action'] == 'View unsubmitted expenses':
             expenses = get_expenses(0)
             if expenses == []:
-                print('\nNo matching expenses!')
+                print(color.BOLD + '\n* No matching expenses!' + color.END)
             else:
                 print_expenses(expenses)
 
         if action['action'] == 'View submitted expenses':
             expenses = get_expenses(1)
             if expenses == []:
-                print('\nNo matching expenses!')
+                print(color.BOLD + '\n* No matching expenses!' + color.END)
             else:
                 print_expenses(expenses)
 
@@ -357,12 +348,12 @@ def main():
                 expenses = get_vendor_expenses(selected_vendor)
                 print_expenses(expenses)
             else:
-                print('\nNo current vendors!')
+                print(color.BOLD + '\n* No current vendors!' + color.END)
 
         if action['action'] == 'View all expenses':
             expenses = get_expenses('ALL')
             if expenses == []:
-                print('\nNo matching expenses!')
+                print(color.BOLD + '\n* No matching expenses!' + color.END)
             else:
                 print_expenses(expenses)
 
@@ -387,14 +378,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
-
-# TODO: generate expense report
-# TODO: sanitize input data
-# TODO: view old reports
-# TODO: setup file storage/linking with database path
-# TODO: make sure "new vendor" is already a vendor
-# TODO: add proper spacing in code
-# TODO: add comments to code
-# TODO: import csv of external expenses
-# TODO: make sure all messages are BOLD
