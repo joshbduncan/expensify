@@ -25,22 +25,6 @@ db.py - SQLite Databse Funcation
 - receipt (TEXT): path to locally stored PDF receipt
 - status (INTEGER): 0 = not submitted, 1 = subitted
 
-### cards Table Schema:
-
-- id (INTEGER): expense card id *(primary key)*
-- date (TEXT): date added *(CURRENT_TIMESTAMP)*
-- name (TEXT): card name/nickname
-- type (TEXT): type/brand of card *(ex. visa, amex, other)*
-- digits (TEXT): last four digits of the card number
-- status (INTEGER): 0 = inactive, 1 = active
-
-### vendors Table Schema:
-
-- id (INTEGER): vendor id *(primary key)*
-- date (TEXT): date added *(CURRENT_TIMESTAMP)*
-- name (TEXT): vendor name
-- status (INTEGER): 0 = inactive, 1 = active
-
 ## TO-DO's
 
 *general*
@@ -51,13 +35,18 @@ db.py - SQLite Databse Funcation
 - [ ] add proper spacing in code
 - [ ] add comments to code
 - [ ] make sure all messages are BOLD
+- [ ] setup admin interface
+- [ ] setup check for dupe on new expense function
+- [ ] limit editable expense list by card/vendor
 
 *database*
 
 - [x] check to see if expenses.db database is created
 - [ ] check on sqlite db error catching
 - [ ] import csv of external expenses
-- [ ] new expense no cards present
+- [x] new expense no cards present
+- [x] insert test data function
+- [ ] setup function to remove test data
 
 *vendors*
 

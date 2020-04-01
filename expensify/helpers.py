@@ -15,27 +15,6 @@ import interface  # termainl interface elements
 ###########################
 
 
-# TODO do i still need this?
-def build_dict(records, table):
-    d = []
-
-    for record in records:
-        info = {
-            'id': record[0],
-            'date': record[1],
-            'description': record[2],
-            'card': record[3],
-            'vendor': record[4],
-            'amount': record[5],
-            'path': record[6],
-            'status': record[7],
-        }
-
-        d.append(info)
-
-    return l
-
-
 # cleaup and print expenses in terminal
 def print_expenses(expenses):
     expenses = sort_expenses(expenses)
@@ -241,7 +220,6 @@ def view_expenses(view_type):
     elif view_type == 'All Expenses':
         command = "SELECT * FROM expenses"
     elif view_type == 'By Card':
-        # TODO display the card and digits
         cards = get_cards()
         result = interface.select_from_list(
             cards, 'Which card?')

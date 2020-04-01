@@ -36,6 +36,7 @@ def main():
 
         # inserting test data
         # TODO remove this or move to admin interface
+        # TODO remove all test data
         if action['action'] == 'Insert Test Data':
             helpers.insert_test_data(20)  # supply number so test expenses
 
