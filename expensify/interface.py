@@ -2,8 +2,19 @@ from __future__ import print_function, unicode_literals
 from PyInquirer import style_from_dict, Token, prompt, Separator
 from PyInquirer import Validator, ValidationError
 
-# import internal modules
-import settings  # import project setting
+
+# terminal coloring and bolding
+class color:
+    PURPLE = '\033[95m'
+    CYAN = '\033[96m'
+    DARKCYAN = '\033[36m'
+    BLUE = '\033[94m'
+    GREEN = '\033[92m'
+    YELLOW = '\033[93m'
+    RED = '\033[91m'
+    BOLD = '\033[1m'
+    UNDERLINE = '\033[4m'
+    END = '\033[0m'
 
 
 class NumberValidator(Validator):
@@ -16,6 +27,35 @@ class NumberValidator(Validator):
                 cursor_position=len(document.text))  # Move cursor to end
 
 
+# def intro():
+#     questions = [
+#         {
+#             'type': 'list',
+#             'name': 'action',
+#             'message': 'What do you want to do?',
+#             'choices': [
+#                 'Add a new expense',
+#                 'View expenses by card',
+#                 Separator(),
+#                 'Edit a current expense',
+#                 'Delete a current expense',
+#                 Separator(),
+#                 'View unsubmitted expenses',
+#                 'View submitted expenses',
+#                 'View expenses by vendor',
+#                 'View all expenses',
+#                 Separator(),
+#                 'Mark expenses(s) as submitted',
+#                 'Mark expenses(s) as unsubmitted',
+#                 Separator(),
+#                 'Exit',
+#                 # Separator(),
+#                 # 'Test 1',
+#             ]
+#         }
+#     ]
+
+
 def intro():
     questions = [
         {
@@ -23,23 +63,30 @@ def intro():
             'name': 'action',
             'message': 'What do you want to do?',
             'choices': [
-                'Add a new expense',
-                'Edit a current expense',
-                'Delete a current expense',
+                'Add a New Expense',
+                'Edit a Current Expense',
                 Separator(),
-                'View unsubmitted expenses',
-                'View submitted expenses',
-                'View expenses by vendor',
-                'View all expenses',
+                'View Expenses',
                 Separator(),
-                'Mark expenses(s) as submitted',
-                'Mark expenses(s) as unsubmitted',
+                'Insert Test Data',  # TODO move to admin interface
                 Separator(),
                 'Exit',
-                # Separator(),
-                # 'Test 1',
             ]
-        }
+        },
+        {
+            'type': 'list',
+            'name': 'view_type',
+            'message': 'What expenses would you like to view?',
+            'choices': [
+                'Current Expenses',
+                'Submitted Expenses',
+                'All Expenses',
+                Separator(),
+                'By Card',
+                'By Vendor',
+            ],
+            'when': lambda answers: answers['action'] == 'View Expenses',
+        },
     ]
 
     answers = prompt(questions)
@@ -47,7 +94,7 @@ def intro():
     return answers
 
 
-def new_expense(vendors):
+def new_expense(cards, vendors):
     questions = [
         {'type': 'input', 'name': 'date', 'message': 'Expense date?'},
         {'type': 'input', 'name': 'description',
@@ -55,8 +102,14 @@ def new_expense(vendors):
         {
             'type': 'list',
             'name': 'card',
-            'message': 'Which company card was used?',
-            'choices': settings.cards
+            'message': 'Which expense card was used?',
+            'choices': cards
+        },
+        {
+            'type': 'input',
+            'name': 'new_card',
+            'message': 'New card name?',
+            'when': lambda answers: answers['card'] == 'New Card',
         },
         {
             'type': 'list',
@@ -87,6 +140,21 @@ def new_expense(vendors):
     return answers
 
 
+def select_from_list(l, message):
+    questions = [
+        {
+            'type': 'list',
+            'name': 'selection',
+            'message': message,
+            'choices': l,
+        },
+    ]
+
+    answers = prompt(questions)
+
+    return answers
+
+
 def vendor_expenses(vendors):
     questions = [
         {
@@ -102,7 +170,18 @@ def vendor_expenses(vendors):
     return answers
 
 
-def edit_expense(expenses, vendors):
+def card_expenses(cards):
+    questions = [
+        {
+            'type': 'list',
+            'name': 'card',
+            'message': 'Card?',
+            'choices': cards
+        },
+    ]
+
+
+def edit_expense(expenses, cards, vendors):
 
     questions = [
         {
@@ -145,8 +224,14 @@ def edit_expense(expenses, vendors):
             'type': 'list',
             'name': 'card',
             'message': 'Which is the updated card?',
-            'choices': settings.cards,
+            'choices': cards,
             'when': lambda answers: answers['update_card'] == True
+        },
+        {
+            'type': 'input',
+            'name': 'new_card',
+            'message': 'New card name?',
+            'when': lambda answers: answers['update_card'] == True and answers['card'] == 'New Card',
         },
         {
             'type': 'confirm',
@@ -163,9 +248,9 @@ def edit_expense(expenses, vendors):
         },
         {
             'type': 'input',
-            'name': 'vendor',
+            'name': 'new_vendor',
             'message': 'New vendor name?',
-            'when': lambda answers: answers['update_vendor'] == True and answers['vendor'] == 'New Vendor'
+            'when': lambda answers: answers['update_vendor'] == True and answers['vendor'] == 'New Vendor',
         },
         {
             'type': 'confirm',
