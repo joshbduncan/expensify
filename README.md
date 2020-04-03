@@ -1,16 +1,16 @@
-# Expensify CLI Expense Tracking App 
+# Expensify CLI Expense Tracking App
 
-expensify.py - Main Application  
-interface.py - PyInquirer CLI Interface Elements  
+expensify.py - Main Application
+interface.py - PyInquirer CLI Interface Elements
 db.py - SQLite Databse Funcation
 
 ## Requirements:
 
-[pyfpdf: FPDF for Python](https://github.com/reingart/pyfpdf)  
-[PyPDF2](https://github.com/mstamy2/PyPDF2)  
-[PythonInquirer](https://github.com/CITGuru/PyInquirer)  
-[python-tabulate](https://github.com/astanin/python-tabulate)  
-[sqlite3](https://docs.python.org/3/library/sqlite3.html)  
+[pyfpdf: FPDF for Python](https://github.com/reingart/pyfpdf)
+[PyPDF2](https://github.com/mstamy2/PyPDF2)
+[PythonInquirer](https://github.com/CITGuru/PyInquirer)
+[python-tabulate](https://github.com/astanin/python-tabulate)
+[sqlite3](https://docs.python.org/3/library/sqlite3.html)
 
 ## Database Setup: expensify.db
 

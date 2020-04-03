@@ -3,11 +3,6 @@ import sqlite3
 from sqlite3 import Error
 
 
-############################
-#### DATEBASE FUNCTIONS ####
-############################
-
-
 # set database name
 db_file = 'expensify.db'
 # get the path of the python program
@@ -58,7 +53,7 @@ def execute(command, data=''):
     try:
         conn = connect()
         c = conn.cursor()
-        status = c.execute(command, data)
+        c.execute(command, data)
         conn.commit()
         conn.close()
         return True

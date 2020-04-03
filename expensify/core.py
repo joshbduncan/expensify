@@ -1,7 +1,4 @@
-import sys
 import os
-from tabulate import tabulate  # better printing of db table info
-import datetime
 import db  # sqlite database functions
 import interface  # termainl interface elements
 import helpers  # program helper functions
@@ -14,8 +11,9 @@ def main():
     # check to see if the expensify database is present
     if not db.check_for_database():
         print(interface.color.BOLD +
-              '\n* Expensify database not found! Creating a new one...\n' + interface.color.END)
-        status = db.create_db()
+              '\n* Expensify database not found! Creating a new one...\n'
+              + interface.color.END)
+        db.create_db()
 
     while True:
 

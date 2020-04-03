@@ -1,18 +1,16 @@
-import sys
 import os
-import sqlite3
-from sqlite3 import Error
 from random import randrange
 from random import choice
 from tabulate import tabulate  # better printing of db table info
-import datetime
 import db  # sqlite database functions
 import interface  # termainl interface elements
 
 
+'''
 ###########################
 #### GENERAL FUNCTIONS ####
 ###########################
+'''
 
 
 # cleaup and print expenses in terminal
@@ -37,9 +35,11 @@ def print_expenses(expenses):
                    tablefmt='simple', showindex=False, floatfmt='.2f'))
 
 
+'''
 #############################
 #### INTERFACE FUNCTIONS ####
 #############################
+'''
 
 
 # present intro interface menu
@@ -55,9 +55,11 @@ def intro_interface():
         intro_interface()
 
 
+'''
 ###############################
 #### WORKING WITH EXPENSES ####
 ###############################
+'''
 
 
 # add a new expense to the database
@@ -85,9 +87,12 @@ def add_expense():
 
     # TODO reconfigure check_for_dupe
     # if check_for_dupe(insert_data):
-    #     print(interface.color.BOLD + '\n* Expense already exists!' + interface.color.END)
+    #     print(interface.color.BOLD +
+    #           '\n* Expense already exists!' + interface.color.END)
     # else:
-    command = "INSERT INTO expenses VALUES (:id, :date, :description, :card, :vendor, :amount, :receipt, :status)"
+    command = ('INSERT INTO expenses VALUES '
+               '(:id, :date, :description, :card, :vendor, '
+               ':amount, :receipt, :status)')
 
     status = db.execute(command, insert_data)
     if status:
@@ -127,17 +132,17 @@ def get_vendors():
 
 
 # check to make sure new/edited expense isn't a duplication
-def check_for_dupe(expense):
-    # get all database expenses
-    expenses = get_expenses('ALL')
-
-    # turn expense into tuple for checking against all expenses
-    check_for_dupe = tuple(v for v in expense.values())
-
-    if check_for_dupe[:4] in [expense[1:5] for expense in expenses]:
-        return True
-    else:
-        return False
+# def check_for_dupe(expense):
+#     # get all database expenses
+#     expenses = get_expenses('ALL')
+#
+#     # turn expense into tuple for checking against all expenses
+#     check_for_dupe = tuple(v for v in expense.values())
+#
+#     if check_for_dupe[:4] in [expense[1:5] for expense in expenses]:
+#         return True
+#     else:
+#         return False
 
 
 # edit an existing expense
@@ -161,7 +166,7 @@ def edit_expense(status='ALL'):
         # iterate through returned expenses and make pretty for interface
         expenses = []
         for expense in fetch:
-            title = f"{expense['date']} {expense['description']} from {expense['vendor']} for ${expense['amount']:.2f} (ID: {expense['id']})"
+            title = (f"{expense['date']} {expense['description']} "from {expense['vendor']} for ${expense['amount']: .2f}(ID: {expense['id']})")
             expenses.append(title)
 
         cards = get_cards() + ['New Card']
@@ -244,9 +249,11 @@ def sort_expenses(expenses):
     return sorted_expenses
 
 
+'''
 #########################
 #### ADMIN FUNCTIONS ####
 #########################
+'''
 
 
 def insert_test_data(records):
