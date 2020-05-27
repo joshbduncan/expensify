@@ -67,6 +67,7 @@ def intro():
                 'Edit a Current Expense',
                 Separator(),
                 'View Expenses',
+                'Delete Expense(s)',
                 Separator(),
                 'Insert Test Data',  # TODO move to admin interface
                 Separator(),
@@ -277,18 +278,45 @@ def edit_expense(expenses, cards, vendors):
     return answers
 
 
-def delete_expense(expenses):
+# def delete_expense(expenses):
+
+#     questions = [
+#         {
+#             'type': 'list',
+#             'name': 'expense',
+#             'message': 'What expense would you like to delete?',
+#             'choices': expenses
+#         },
+#         {
+#             'type': 'confirm',
+#             'message': "Are you sure you want to delete this expense? THIS ACTION CAN'T BE UNDONE!",
+#             'name': 'delete',
+#             'default': False,
+#         },
+#     ]
+
+#     answers = prompt(questions)
+
+#     return answers
+
+
+def delete_expenses(expenses):
+
+    choices = []
+
+    for expense in expenses:
+        choices.append({'name': expense})
 
     questions = [
         {
-            'type': 'list',
-            'name': 'expense',
-            'message': 'What expense would you like to delete?',
-            'choices': expenses
+            'type': 'checkbox',
+            'message': 'What expense(s) would you like deleted?',
+            'name': 'expenses',
+            'choices': choices,
         },
         {
             'type': 'confirm',
-            'message': "Are you sure you want to delete this expense? THIS ACTION CAN'T BE UNDONE!",
+            'message': "Are you sure you want to delete the selected expense(s)? THIS ACTION CAN'T BE UNDONE!",
             'name': 'delete',
             'default': False,
         },

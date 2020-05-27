@@ -145,6 +145,51 @@ def get_vendors():
 #         return False
 
 
+# delete an expense
+def delete_expenses(status='ALL'):
+
+    # get a list of all expenses in the database
+    if status == 'ALL':
+        command = "SELECT * FROM expenses"
+    else:
+        command = f"SELECT * FROM expenses WHERE status={status}"
+
+    fetch = sort_expenses(db.fetchall(command,))
+
+    if fetch == []:
+        print(interface.color.BOLD +
+              '\n* No expenses available to delete!' + interface.color.END)
+    else:
+        # iterate through returned expenses and make pretty for interface
+        expenses = []
+        for expense in fetch:
+            title = (
+                f"{expense['date']} {expense['description']} from {expense['vendor']} for ${expense['amount']:.2f} (ID: {expense['id']})")
+            expenses.append(title)
+
+        # present delete expense(s) interface
+        deleted_expenses = interface.delete_expenses(expenses)
+
+        if len(deleted_expenses['expenses']) > 0 and deleted_expenses['delete']:
+            for expense in deleted_expenses['expenses']:
+
+                # format the text to get the expense record id
+                expense_id = expense.split(' (')[-1].split(': ')[-1][:-1]
+
+                # create sql delete command
+                command = f"DELETE from expenses WHERE id={expense_id}"
+
+                # send delete command to the database
+                status = db.execute(command)
+
+                print(interface.color.BOLD + '\n' + expense.split(' (')[0] +
+                      ' DELETED!' + interface.color.END)
+
+        else:
+            print(interface.color.BOLD +
+                  '\n* No expenses deleted!' + interface.color.END)
+
+
 # edit an existing expense
 def edit_expense(status='ALL'):
 
@@ -167,7 +212,7 @@ def edit_expense(status='ALL'):
         expenses = []
         for expense in fetch:
             title = (
-                f"{expense['date']} {expense['description']} from {expense['vendor']} for ${expense['amount']: .2f}(ID: {expense['id']})")
+                f"{expense['date']} {expense['description']} from {expense['vendor']} for ${expense['amount']:.2f} (ID: {expense['id']})")
             expenses.append(title)
 
         cards = get_cards() + ['New Card']

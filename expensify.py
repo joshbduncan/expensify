@@ -32,6 +32,10 @@ def main():
         if action['action'] == 'View Expenses':
             helpers.view_expenses(action['view_type'])
 
+        # delete expenses
+        if action['action'] == 'Delete Expense(s)':
+            helpers.delete_expenses()
+
         # inserting test data
         # TODO remove this or move to admin interface
         # TODO remove all test data

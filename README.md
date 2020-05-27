@@ -2,7 +2,7 @@
 
 expensify.py - Main Application  
 interface.py - PyInquirer CLI Interface Elements  
-db.py - SQLite Databse Funcation  
+db.py - SQLite Databse Funcations  
 
 ## Requirements:
 
@@ -28,8 +28,8 @@ db.py - SQLite Databse Funcation
 ## TO-DO's
 
 *general*
-- [ ] delete multiple expenses
-- [ ] move color to interface.py
+- [x] delete multiple expenses
+- [x] move color to interface.py
 - [ ] check if exact record already exists
 - [ ] sanitize input data
 - [ ] add proper spacing in code
