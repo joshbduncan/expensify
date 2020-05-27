@@ -166,7 +166,8 @@ def edit_expense(status='ALL'):
         # iterate through returned expenses and make pretty for interface
         expenses = []
         for expense in fetch:
-            title = (f"{expense['date']} {expense['description']} "from {expense['vendor']} for ${expense['amount']: .2f}(ID: {expense['id']})")
+            title = (
+                f"{expense['date']} {expense['description']} from {expense['vendor']} for ${expense['amount']: .2f}(ID: {expense['id']})")
             expenses.append(title)
 
         cards = get_cards() + ['New Card']
