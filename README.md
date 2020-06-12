@@ -18,7 +18,7 @@ db.py - SQLite Databse Funcations
 
 - id (INTEGER): expense id *(primary key)*
 - date (TEXT): date *(ex. 2000-01-01)*
-- description(TEXT): description of expense
+- description (TEXT): description of expense
 - card (TEXT): company card used
 - vendor (TEXT): expense vendor
 - amount (TEXT): dollar amount of expense
